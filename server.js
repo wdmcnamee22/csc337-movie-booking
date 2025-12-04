@@ -18,7 +18,7 @@ app.use(session({
 /* Bookings Module Routes */
 
 app.get("/bookings", function (req, res) {
-    res.send("My bookings page placeholder");
+    res.send("Bookings page placeholder");
 });
 
 app.post("/bookings", function (req, res) {
