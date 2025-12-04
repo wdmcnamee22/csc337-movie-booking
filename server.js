@@ -11,11 +11,6 @@ app.use(session({
     saveUninitialized: false
 }));
 
-// Home page placeholder
-app.get("/", function (req, res) {
-    res.send("Home page placeholder");
-});
-
 /* Users Module Routes */
 
 /* Events/Movies Module Routes */
