@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<head>
+    <title>Book Event</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        header {
+            padding: 12px;
+            text-align: center;
+        }
+        #main {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 10px;
+        }
+        .movie-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .movie-box img {
+            width: 120px;
+            height: 180px;
+            object-fit: cover;
+        }
+        label {
+            display: block;
+            margin-top: 12px;
+        }
+        input,
+        select {
+            width: 100%;
+            padding: 6px;
+            margin-top: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 14px;
+            padding: 10px;
+            width: 100%;
+        }
+        #msg {
+            margin-top: 12px;
+            text-align: center;
+        }
+        a {
+            display: block;
+            margin-top: 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<!-- User reaches this after selecting an event -->
+<header>
+    <h1>Book Your Movie</h1>
+</header>
+<main id="main">
+    <!-- The events module will pass the real title, poster, description, and eventId -->
+    <h2>Event Details</h2>
+    <div class="movie-box">
+        <img id="poster" src="poster-placeholder.jpg" alt="Movie Poster">
+        <div class="movie-info">
+            <h3 id="movieName">Sample Movie Title</h3>
+            <p id="movieDescription">
+                This description will be replaced with real movie data later.
+            </p>
+        </div>
+    </div>
+    <!-- Backend will save this info into bookings.json -->
+    <h2>Create Your Booking</h2>
+    <form id="bookingForm" method="POST" action="/bookings">
+        <!-- eventId will be set by the events module when a movie is selected -->
+        <input type="hidden" id="eventId" name="eventId" value="123">
+        <label>Your Name
+            <input type="text" id="name" name="name" required>
+        </label>
+        <label>Phone Number
+            <input type="text" id="phone" name="phone" required>
+        </label>
+        <label>Select Theater Location
+            <!-- Theater dropdown, we can change this later -->
+            <select id="theater" name="theater" required>
+                <option value="">-- Choose a theater --</option>
+                <option value="downtown">Tannehill Theater (100 seats)</option>
+                <option value="uptown">Fitzpatrick Cinema (60 seats)</option>
+                <option value="campus">Cutler Theaters (40 seats)</option>
+            </select>
+        </label>
+        <label>Select a Time
+            <select id="time" name="time" required>
+                <option value="">-- Choose a time --</option>
+                <option value="12:00 PM">12:00 PM</option>
+                <option value="3:00 PM">3:00 PM</option>
+                <option value="6:00 PM">6:00 PM</option>
+                <option value="9:00 PM">9:00 PM</option>
+            </select>
+        </label>
+        <!-- Backend will save the booking here and redirect to /my-bookings -->
+        <button type="submit">Book Now</button>
+        <div id="msg"></div>
+    </form>
+    <!-- This page will show all bookings for the logged-in user -->
+    <a href="/my-bookings">View My Bookings</a>
+</main>
+<script>
+    /* Placeholder event data */
+    document.getElementById("movieName").textContent = "Sample Movie Title";
+    document.getElementById("movieDescription").textContent =
+        "This will be replaced with the real movie summary from the events module.";
+    document.getElementById("poster").src = "poster-placeholder.jpg";
+
+    /* Temporary frontend-only validation, backend will eventually save booking to bookings.json */
+    document.getElementById("bookingForm").onsubmit = function (e) {
+        e.preventDefault();
+        var name = document.getElementById("name").value.trim();
+        var phone = document.getElementById("phone").value.trim();
+        var theater = document.getElementById("theater").value;
+        var time = document.getElementById("time").value;
+        var msg = document.getElementById("msg");
+        if (name === "" || phone === "" || theater === "" || time === "") {
+            msg.textContent = "Please fill out all fields.";
+            return;
+        }
+        msg.textContent = "Booking submitted!";
+        console.log("Name:", name);
+        console.log("Phone:", phone);
+        console.log("Theater:", theater);
+        console.log("Time:", time);
+        console.log("Event ID:", document.getElementById("eventId").value);
+    };
+</script>
+</body>
+</html>
