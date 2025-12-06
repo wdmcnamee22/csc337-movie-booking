@@ -1,0 +1,13 @@
+{
+  "eventId": "event002",
+  "name": "Inside Out 2",
+  "description": "A colorful animated adventure exploring Riley’s emotional growth as new feelings emerge during her teenage years.",
+  "date": "2025-12-20",
+  "time": "5:00 PM",
+  "genre": "Animation",
+  "image": "insideout2.jpg",
+  "reviews": [
+    ["Heartwarming and funny. Great for families.", 5, "user789"],
+    ["Not as strong as the first, but still great.", 4, "user333"]
+  ]
+}

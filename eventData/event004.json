@@ -1,0 +1,13 @@
+{
+  "eventId": "event004",
+  "name": "Alien: Awakening",
+  "description": "A tense sci-fi horror entry returning to the roots of suspense and atmospheric terror.",
+  "date": "2025-12-18",
+  "time": "10:00 PM",
+  "genre": "Sci-Fi",
+  "image": "alienawakening.jpg",
+  "reviews": [
+    ["Creepy and visually impressive.", 4, "user999"],
+    ["Good horror, but predictable in parts.", 3, "user555"]
+  ]
+}
