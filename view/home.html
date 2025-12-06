@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<head>
+  <title>Home</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a1c4fd);
+      background-attachment: fixed;
+      color: white;
+    }
+
+    /* HEADER */
+    .header {
+      width: 100%;
+      background-color: white;
+      border-bottom: 2px solid black;
+      padding: 15px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    .site-title {
+      color: black;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .user-info {
+      color: black;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .username {
+      color: black;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      padding: 8px 14px;
+      border: none;
+      background-color: #ff4747;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+
+    .gallery-block {
+      margin: 40px 0;
+      padding-left: 20px;
+    }
+
+    .gallery-title {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .gallery {
+      display: flex;
+      overflow-x: auto;
+      gap: 20px;
+      padding-bottom: 20px;
+      scroll-snap-type: x mandatory;
+    }
+
+    .event-card {
+      color: black;
+      background: #ffffff;
+      width: 250px;
+      border-radius: 10px;
+      padding: 15px;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      box-shadow: 0 0 8px rgba(219, 219, 219, 0.5);
+    }
+
+    .event-card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .event-name {
+      font: bold;
+      font-size: 18px;
+      margin: 10px 0 5px;
+    }
+
+    .event-description {
+      font-size: 14px;
+      color: #7a7a7a;
+      height: 45px;
+      overflow: hidden;
+    }
+
+    .rating {
+      margin-top: 5px;
+      font-size: 15px;
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .btn {
+      width: 48%;
+      padding: 8px 0;
+      background-color: #555;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn:hover {
+      background-color: #777;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="site-title">MovieVerse</div>
+
+    <div class="user-info">
+      <div class="username">User123</div>
+      <button class="logout-btn">Logout</button>
+    </div>
+  </div>
+
+  <!-- Scrolling Galleries -->
+  <div class="gallery-block">
+    <div class="gallery-title">January 12, 2025</div>
+    <div class="gallery">
+
+      <div class="event-card">
+        <img src="/public/images/event1.jpg" />
+        <div class="event-name">Interstellar</div>
+        <div class="event-description">A team travels beyond the galaxy to discover humanity's future.</div>
+        <div class="rating">Rating: 4.5⭐</div>
+        <div class="btn-row">
+          <button class="btn">Book</button>
+          <button class="btn">Review</button>
+        </div>
+      </div>
+
+      <div class="event-card">
+        <img src="/public/images/event2.jpg" />
+        <div class="event-name">Inception</div>
+        <div class="event-description">A thief enters dreams to steal secrets and plant ideas.</div>
+        <div class="rating">Rating: 4.8⭐</div>
+        <div class="btn-row">
+          <button class="btn">Book</button>
+          <button class="btn">Review</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="gallery-block">
+    <div class="gallery-title">January 13, 2025</div>
+    <div class="gallery">
+
+      <div class="event-card">
+        <img src="/public/images/event3.jpg" />
+        <div class="event-name">The Dark Knight</div>
+        <div class="event-description">Batman faces off against the Joker in Gotham City.</div>
+        <div class="rating">Rating: 4.9⭐</div>
+        <div class="btn-row">
+          <button class="btn">Book</button>
+          <button class="btn">Review</button>
+        </div>
+      </div>
+
+      <div class="event-card">
+        <img src="/public/images/event4.jpg" />
+        <div class="event-name">Interstellar</div>
+        <div class="event-description">Space exploration to find a new home for humanity.</div>
+        <div class="rating">Rating: 4.7⭐</div>
+        <div class="btn-row">
+          <button class="btn">Book</button>
+          <button class="btn">Review</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/public/js/home.js" defer></script>
+
+</body>
+
+</html>
