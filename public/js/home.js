@@ -74,7 +74,11 @@ function renderGalleries(groupedEvents) {
                 <div class="event-description">${ev.description}</div>
                 <div class="rating">Rating: ${ev.rating}⭐</div>
                 <div class="btn-row">
-                  <button class="btn">Book</button>
+                  <button 
+                    class="btn book-btn"
+                    data-name="${ev.name}"
+                    data-description="${ev.description}"
+                    data-image="${ev.image}">Book</button>
                   <button class="btn">Review</button>
                 </div>
             `;
@@ -85,4 +89,21 @@ function renderGalleries(groupedEvents) {
         block.appendChild(gallery);
         body.appendChild(block);
     }
+    // Book button click listeners
+    const bookButtons = document.querySelectorAll(".book-btn");
+    bookButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            const name = this.dataset.name;
+            const desc = this.dataset.description;
+            const image = this.dataset.image;
+    
+            const params = new URLSearchParams({
+                name: name,
+                description: desc,
+                image: image
+            });
+    
+            window.location.href = "/bookings?" + params.toString();
+        });
+    });
 }
