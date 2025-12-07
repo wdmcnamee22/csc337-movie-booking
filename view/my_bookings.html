@@ -41,19 +41,15 @@
 </header>
 <main id="main">
     <h2>Your Bookings</h2>
-    <!-- Placeholder example, will be replaced with data from bookings.json -->
-    <div class="booking">
-        <h3>Sample Movie Title</h3>
-        <p>Theater: Marino Theater</p>
-        <p>Time: 6:00 PM</p>
-        <p>Phone: 555-123-4567</p>
-        <form method="POST" action="/cancel-booking">
-            <input type="hidden" name="bookingId" value="sample-id">
-            <button type="submit">Cancel</button>
-        </form>
-    </div>
-    <!-- Link back to events page -->
-    <a href="/events">Back to Events</a>
+
+    <!-- This container will be filled with the logged-in user's bookings -->
+    <div id="bookingsContainer"></div>
+
+    <!-- Link back to home/events page -->
+    <a href="/home">Back to Home</a>
 </main>
+
+<!-- JS file that fetches /api/my-bookings and renders the list -->
+<script src="/public/js/my_bookings.js" defer></script>
 </body>
 </html>
