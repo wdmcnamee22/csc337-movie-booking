@@ -3,6 +3,7 @@ var fs = require("fs");
 var session = require("express-session");
 var path = require("path");
 var app = express();
+const setupBookings = require("./bookings");
 
 // ------------------------------------
 // Ensure userData directory + users.json exist
@@ -62,6 +63,8 @@ function requireLogin(req, res, next) {
     }
     next();
 }
+
+setupBookings(app, requireLogin);
 
 // here is where we register a user
 app.post("/register", (req, res) => {
