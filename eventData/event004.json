@@ -7,7 +7,20 @@
   "genre": "Sci-Fi",
   "image": "alienawakening.jpg",
   "reviews": [
-    ["Creepy and visually impressive.", 4, "user999"],
-    ["Good horror, but predictable in parts.", 3, "user555"]
+    [
+      "Creepy and visually impressive.",
+      4,
+      "user999"
+    ],
+    [
+      "Good horror, but predictable in parts.",
+      3,
+      "user555"
+    ],
+    [
+      "yep",
+      3,
+      "Cole"
+    ]
   ]
 }

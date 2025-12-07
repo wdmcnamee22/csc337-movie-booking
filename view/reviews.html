@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Reviews</title>
+    <link rel="stylesheet" href="/public/styles.css">
+    <style>
+        .review-container{ margin: 20px 0; }
+        .review{ border-bottom: 1px solid #ccc; padding: 10px 0; }
+        .review .username{ font-weight: bold; }
+        .stars{ display: inline-block; }
+        .star{ font-size: 1.5em; margin-right: 5px; cursor: pointer; color: #ccc; }
+        .star.selected{ color: gold; }
+        #average-rating{ margin-bottom: 20px; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+    <h1 id="event-title">Movie Reviews</h1>
+
+    <div id="average-rating"></div>
+
+    <div class="review-container">
+        <h2>Leave a Review</h2>
+        <div id="star-rating" class="stars">
+            <span class="star" data-value="1">★</span>
+            <span class="star" data-value="2">★</span>
+            <span class="star" data-value="3">★</span>
+            <span class="star" data-value="4">★</span>
+            <span class="star" data-value="5">★</span>
+        </div>
+        <br>
+        <textarea id="review-text" rows="4" cols="50" placeholder="Write your review here..."></textarea>
+        <br>
+        <button id="submit-review">Submit Review</button>
+    </div>
+
+    <div class="review-container">
+        <h2>Existing Reviews</h2>
+        <div id="review-list">Loading reviews...</div>
+    </div>
+
+    <script src="/public/js/reviews.js"></script>
+</body>
+</html>
+

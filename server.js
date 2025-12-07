@@ -113,12 +113,44 @@ app.get("/home", requireLogin, (req, res) => {
     res.sendFile(path.join(__dirname, "view", "home.html"));
 });
 
+// review page
+app.get("/reviews", requireLogin, (req, res) => {
+    res.sendFile(path.join(__dirname, "view", "reviews.html"));
+});
+
 // logs the user aout and ends the sessions
 // do the logout stuff here
 app.get("/logout", (req, res) => {
     req.session.destroy();
     res.redirect("/");
 });
+
+// adding post for reviews
+app.post("/reviews/add", requireLogin, (req, res) => {
+    const { eventId, rating, text } = req.body;
+    if (!eventId || !rating || !text) return res.status(400).send("Invalid request");
+
+    const filePath = path.join(__dirname, "eventData", `${eventId}.json`);
+    if (!fs.existsSync(filePath)) return res.status(404).send("Event not found");
+
+    const eventData = JSON.parse(fs.readFileSync(filePath));
+
+    // Get username from session
+    const users = loadUsers();
+    const user = users.find(u => u.id === req.session.userId);
+    if (!user) return res.status(401).send("User not found");
+
+    // Append new review
+    if (!eventData.reviews) eventData.reviews = [];
+    eventData.reviews.push([text, rating, user.username]);
+
+    // Save updated event file
+    fs.writeFileSync(filePath, JSON.stringify(eventData, null, 2));
+
+    res.sendStatus(200);
+});
+
+
 
 // Events Module
 app.get("/events/list", (req, res) => {

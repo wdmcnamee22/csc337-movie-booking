@@ -7,7 +7,15 @@
   "genre": "Animation",
   "image": "insideout2.jpg",
   "reviews": [
-    ["Heartwarming and funny. Great for families.", 5, "user789"],
-    ["Not as strong as the first, but still great.", 4, "user333"]
+    [
+      "Heartwarming and funny. Great for families.",
+      5,
+      "user789"
+    ],
+    [
+      "Not as strong as the first, but still great.",
+      4,
+      "user333"
+    ]
   ]
 }

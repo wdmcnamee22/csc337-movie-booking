@@ -7,7 +7,15 @@
   "genre": "Drama",
   "image": "oppenheimer.jpg",
   "reviews": [
-    ["Amazing cinematography and sound design.", 5, "user123"],
-    ["Brilliant acting, but long runtime.", 4, "user456"]
+    [
+      "Amazing cinematography and sound design.",
+      5,
+      "user123"
+    ],
+    [
+      "Brilliant acting, but long runtime.",
+      4,
+      "user456"
+    ]
   ]
 }

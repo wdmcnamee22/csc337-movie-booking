@@ -106,4 +106,18 @@ function renderGalleries(groupedEvents) {
             window.location.href = "/bookings?" + params.toString();
         });
     });
+	
+	// Review button click listeners
+	document.querySelectorAll(".btn").forEach(function (btn) {
+    if (btn.textContent.trim().toLowerCase() === "review") {
+        btn.addEventListener("click", function () {
+            const card = this.closest(".event-card");
+            const name = card.querySelector(".event-name").textContent.trim();
+
+            const params = new URLSearchParams({ name });
+
+            window.location.href = "/reviews?" + params.toString();
+        });
+    }
+});
 }

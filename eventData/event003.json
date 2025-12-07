@@ -7,7 +7,25 @@
   "genre": "Action",
   "image": "johnwick5.jpg",
   "reviews": [
-    ["Non-stop action, exactly what I wanted.", 5, "user111"],
-    ["A bit over the top, but entertaining.", 3, "user222"]
+    [
+      "Non-stop action, exactly what I wanted.",
+      5,
+      "user111"
+    ],
+    [
+      "A bit over the top, but entertaining.",
+      3,
+      "user222"
+    ],
+    [
+      "dude!",
+      5,
+      "Cole"
+    ],
+    [
+      "yeah man",
+      5,
+      "Cole"
+    ]
   ]
 }
