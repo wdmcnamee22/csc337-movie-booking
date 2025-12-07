@@ -5,30 +5,49 @@
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a1c4fd);
+            background-attachment: fixed;
+            color: white;
         }
+    
         header {
             padding: 12px;
             text-align: center;
         }
+    
+        header h1,
+        h2 {
+            color: black;
+            text-align: center;
+        }
+    
         #main {
             max-width: 600px;
             margin: 20px auto;
-            padding: 10px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            color: black;
         }
+    
         .movie-box {
             display: flex;
             gap: 12px;
             margin-bottom: 20px;
         }
+    
         .movie-box img {
             width: 120px;
             height: 180px;
             object-fit: cover;
+            border-radius: 5px;
         }
+    
         label {
             display: block;
             margin-top: 12px;
         }
+    
         input,
         select {
             width: 100%;
@@ -36,17 +55,26 @@
             margin-top: 4px;
             box-sizing: border-box;
         }
+    
         button {
             margin-top: 14px;
             padding: 10px;
             width: 100%;
+            border: none;
+            border-radius: 6px;
+            background: #2a62ff;
+            color: white;
+            cursor: pointer;
         }
+    
         a {
             display: block;
             margin-top: 16px;
             text-align: center;
+            color: black;
+            text-decoration: underline;
         }
-    </style>
+    </style>    
 </head>
 <body>
 <header>
