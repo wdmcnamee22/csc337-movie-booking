@@ -112,10 +112,18 @@ app.get("/auth/status", (req, res) => {
         return res.json({ loggedIn: false });
     }
 
+    const users = loadUsers();
+    const user = users.find(u => u.id === req.session.userId);
+
+    if (!user) {
+        req.session.destroy();
+        return res.json({ loggedIn: false });
+    }
+
     res.json({
         loggedIn: true,
-        username: req.session.username,
-        isAdmin: req.session.isAdmin || false
+        username: user.username,
+        isAdmin: user.isAdmin === true
     });
 });
 
@@ -153,6 +161,64 @@ app.get("/events/data/:file", (req, res) => {
 
     const eventData = JSON.parse(fs.readFileSync(filePath));
     res.json(eventData);
+});
+
+app.get("/admin/new_event", (req, res) => {
+
+    if (!req.session.userId || req.session.isAdmin !== true) {
+        return res.status(403).send("Access denied");
+    }
+
+    res.sendFile(path.join(__dirname, "view", "create_event.html"));
+});
+
+app.post("/create-event", (req, res) => {
+    const eventData = req.body;
+
+    // Auto-generate eventId
+    const eventId = "event" + Date.now();
+    eventData.eventId = eventId;
+
+    const filePath = path.join(__dirname, "eventData", `${eventId}.json`);
+
+    fs.writeFile(filePath, JSON.stringify(eventData, null, 2), (err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Failed to save event." });
+        }
+        res.status(200).json({ message: "Event created", eventId });
+    });
+});
+
+app.delete("/events/:eventId", (req, res) => {
+    // Check admin
+    if (!req.session.isAdmin) {
+        return res.status(403).send("Access denied");
+    }
+
+    const eventId = req.params.eventId;
+    const eventDir = path.join(__dirname, "eventData");
+
+    // Look for the file with this eventId
+    fs.readdir(eventDir, (err, files) => {
+        if (err) return res.status(500).send("Server error");
+
+        const fileToDelete = files.find(f => {
+            if (!f.endsWith(".json")) return false;
+            const data = JSON.parse(fs.readFileSync(path.join(eventDir, f)));
+            return data.eventId === eventId;
+        });
+
+        if (!fileToDelete) {
+            return res.status(404).send("Event not found");
+        }
+
+        // Delete the file
+        fs.unlink(path.join(eventDir, fileToDelete), err => {
+            if (err) return res.status(500).send("Failed to delete event");
+            res.send("Event deleted successfully");
+        });
+    });
 });
 
 app.get("/my_bookings", requireLogin, (req, res) => {
