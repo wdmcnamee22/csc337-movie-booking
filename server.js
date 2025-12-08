@@ -99,7 +99,10 @@ app.post("/login", (req, res) => {
         (u) => u.username === username && u.password === password
     );
 
-    if (!user) return res.send("Invalid username or password.");
+    if (!user) {
+        return res.send("Invalid username or password.");
+    }
+
 
     // save their id in the session so that they stay logged in
     req.session.userId = user.id;
