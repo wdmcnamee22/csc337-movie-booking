@@ -1,6 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
+    checkAdmin();
     loadEvents();
 });
+
+async function checkAdmin() {
+    const res = await fetch("/auth/status");
+    const data = await res.json();
+
+    if (data.loggedIn && data.isAdmin) {
+        addAdminButton();
+    }
+}
+
+function addAdminButton() {
+    const header = document.querySelector(".header");
+
+    const adminBtn = document.createElement("a");
+    adminBtn.textContent = "Add Event";
+    adminBtn.href = "/admin/new_event";   // page you will create later
+    adminBtn.className = "btn";
+
+    header.appendChild(adminBtn);
+}
 
 async function loadEvents() {
     try {

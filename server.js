@@ -77,14 +77,15 @@ app.post("/register", (req, res) => {
     }
 
     // this line makes a user id
-    var newUser = { id: Date.now(), username, password };
+    var newUser = { id: Date.now(), username, password, isAdmin: false };
 
     users.push(newUser);
     saveUsers(users);
 
     // log the user in right after making an account
     req.session.userId = newUser.id;
-    res.redirect("/home");
+    req.session.isAdmin = newUser.isAdmin;
+    return res.send("OK");
 });
 
 // login work here for existing users
@@ -102,7 +103,20 @@ app.post("/login", (req, res) => {
 
     // save their id in the session so that they stay logged in
     req.session.userId = user.id;
-    res.redirect("/home");
+    req.session.isAdmin = user.isAdmin;
+    return res.send("OK");
+});
+
+app.get("/auth/status", (req, res) => {
+    if (!req.session.userId) {
+        return res.json({ loggedIn: false });
+    }
+
+    res.json({
+        loggedIn: true,
+        username: req.session.username,
+        isAdmin: req.session.isAdmin || false
+    });
 });
 
 // IMPORTANT!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -139,6 +153,10 @@ app.get("/events/data/:file", (req, res) => {
 
     const eventData = JSON.parse(fs.readFileSync(filePath));
     res.json(eventData);
+});
+
+app.get("/my_bookings", requireLogin, (req, res) => {
+    res.sendFile(path.join(__dirname, "view", "my_bookings.html"));
 });
 
 // start the server up here
