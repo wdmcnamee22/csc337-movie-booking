@@ -96,13 +96,76 @@ module.exports = function (app, requireLogin) {
     app.post("/cancel-booking", requireLogin, function (req, res) {
         const bookingId = req.body.bookingId;
         const bookings = loadBookings();
+    
+        // Admins can cancel ANY booking
+        const isAdmin = req.session.isAdmin === true;
+    
+        let updated;
+    
+        if (isAdmin) {
+            // Remove the booking regardless of who created it
+            updated = bookings.filter(function (b) {
+                return b.id !== bookingId;
+            });
+        } else {
+            // Normal users: ONLY remove if the booking belongs to them
+            updated = bookings.filter(function (b) {
+                return !(b.id === bookingId && b.userId === req.session.userId);
+            });
+        }
+    
+        saveBookings(updated);
+        res.redirect("/my-bookings");
+    });    
 
-        const updated = bookings.filter(function (b) {
-            // only allow deleting your own booking
-            return !(b.id === bookingId && b.userId === req.session.userId);
+    // ----------------------
+    // Admin: get ALL bookings
+    // ----------------------
+    app.get("/api/all-bookings", requireLogin, function (req, res) {
+        if (!req.session.isAdmin) {
+            // Only admins can see all bookings
+            return res.status(403).json({ error: "Not authorized" });
+        }
+
+        const bookings = loadBookings();
+        res.json(bookings);
+    });
+
+    // ----------------------
+    // Admin: update a booking
+    // ----------------------
+    app.post("/update-booking", requireLogin, function (req, res) {
+        // Only admins can edit bookings
+        if (!req.session.isAdmin) {
+            return res.status(403).send("Not authorized.");
+        }
+
+        const bookingId = req.body.bookingId;
+        const name = req.body.name;
+        const phone = req.body.phone;
+        const theater = req.body.theater;
+        const time = req.body.time;
+
+        let bookings = loadBookings();
+        let found = false;
+
+        bookings = bookings.map(function (b) {
+            if (b.id === bookingId) {
+                found = true;
+                // Only update fields that were sent
+                if (name !== undefined) b.name = name;
+                if (phone !== undefined) b.phone = phone;
+                if (theater !== undefined) b.theater = theater;
+                if (time !== undefined) b.time = time;
+            }
+            return b;
         });
 
-        saveBookings(updated);
+        if (!found) {
+            return res.status(404).send("Booking not found.");
+        }
+
+        saveBookings(bookings);
         res.redirect("/my-bookings");
     });
 };
