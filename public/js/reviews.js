@@ -2,16 +2,16 @@ let selectedRating = 0;
 let isAdmin = false;
 
 document.addEventListener("DOMContentLoaded", async () => {
-	checkAdmin();
+	await checkAdmin();
     const params = new URLSearchParams(window.location.search);
-    const eventName = params.get("name");
+    const eventId = params.get("eventId"); // <--- use eventId
 
-    if (!eventName) {
+    if (!eventId) {
         document.getElementById("review-list").innerHTML = "No event specified.";
         return;
     }
 
-    const eventData = await loadEventByName(eventName);
+    const eventData = await loadEventById(eventId); // <- new function
     if (!eventData) {
         document.getElementById("review-list").innerHTML = "Event not found.";
         return;
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         if (res.ok) {
-            const updatedEvent = await loadEventByName(eventName);
+            const updatedEvent = await loadEventById(eventId);
             renderEventReviews(updatedEvent);
             document.getElementById("review-text").value = "";
             selectedRating = 0;
@@ -60,7 +60,16 @@ async function checkAdmin() {
     }
 }
 
-
+async function loadEventById(eventId) {
+    try {
+        const response = await fetch("/events/all"); // all events from single JSON
+        const events = await response.json();
+        return events.find(ev => ev.eventId === eventId) || null;
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
+}
 
 async function loadEventByName(eventName) {
     try {
@@ -89,7 +98,7 @@ function renderEventReviews(eventData) {
     }
 
     // Display preexisting reviews
-    eventData.reviews.forEach(([text, rating, username]) => {
+    eventData.reviews.forEach(([text, rating, username], index) => {
         const div = document.createElement("div");
         div.classList.add("review");
         div.innerHTML = `
@@ -173,8 +182,8 @@ async function deleteReview(eventId, reviewIndex) {
 
     if (res.ok) {
         const params = new URLSearchParams(window.location.search);
-        const eventName = params.get("name");
-        const updatedEvent = await loadEventByName(eventName);
+        const eventId = params.get("eventId");
+        const updatedEvent = await loadEventById(eventId);
         renderEventReviews(updatedEvent);
     } else {
         alert("Failed to delete review.");

@@ -30,17 +30,9 @@ function addAdminButton() {
 async function loadEvents() {
     try {
         // Step 1: Fetch list of JSON files from backend
-        const response = await fetch("/events/list");
-        const eventFiles = await response.json();
 
-        let events = [];
-
-        // Step 2: Load all event JSON files
-        for (const file of eventFiles) {
-            const eventRes = await fetch(`/events/data/${file}`);
-            const eventJson = await eventRes.json();
-            events.push(eventJson);
-        }
+        const response = await fetch("/events/all");
+        const events = await response.json();
 
         // Step 3: Group events by date
         const grouped = groupByDate(events);
@@ -134,7 +126,7 @@ function renderGalleries(groupedEvents) {
                     data-name="${ev.name}"
                     data-description="${ev.description}"
                     data-image="${ev.image}">Book</button>
-                  <button class="btn">Review</button>
+                  <button class="btn review-btn">Review</button>
                   <button class="delete-event-btn admin-only">Delete Event</button>
                 </div>
             `;
@@ -171,41 +163,29 @@ function renderGalleries(groupedEvents) {
                 });
             }
 
+            // Book button click listeners
+            const bookBtn = card.querySelector(".book-btn");
+            bookBtn.addEventListener("click", function () {
+                const params = new URLSearchParams({
+                    eventId: ev.eventId,
+                    name: ev.name,
+                    description: ev.description,
+                    image: ev.image
+                });
+                window.location.href = "/bookings?" + params.toString();
+            });
+
+            // Review button
+            const reviewBtn = card.querySelector(".review-btn");
+            reviewBtn.addEventListener("click", function () {
+                const params = new URLSearchParams({ eventId: ev.eventId });
+                window.location.href = "/reviews?" + params.toString();
+            });
+
             gallery.appendChild(card);
         });
 
         block.appendChild(gallery);
         body.appendChild(block);
     });
-    // Book button click listeners
-    const bookButtons = document.querySelectorAll(".book-btn");
-    bookButtons.forEach(function (btn) {
-        btn.addEventListener("click", function () {
-            const name = this.dataset.name;
-            const desc = this.dataset.description;
-            const image = this.dataset.image;
-    
-            const params = new URLSearchParams({
-                name: name,
-                description: desc,
-                image: image
-            });
-    
-            window.location.href = "/bookings?" + params.toString();
-        });
-    });
-	
-	// Review button click listeners
-	document.querySelectorAll(".btn").forEach(function (btn) {
-    if (btn.textContent.trim().toLowerCase() === "review") {
-        btn.addEventListener("click", function () {
-            const card = this.closest(".event-card");
-            const name = card.querySelector(".event-name").textContent.trim();
-
-            const params = new URLSearchParams({ name });
-
-            window.location.href = "/reviews?" + params.toString();
-        });
-    }
-});
 }

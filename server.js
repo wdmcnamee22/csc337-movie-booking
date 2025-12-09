@@ -99,10 +99,7 @@ app.post("/login", (req, res) => {
         (u) => u.username === username && u.password === password
     );
 
-    if (!user) {
-        return res.send("Invalid username or password.");
-    }
-
+    if (!user) return res.send("Invalid username or password.");
 
     // save their id in the session so that they stay logged in
     req.session.userId = user.id;
@@ -138,11 +135,6 @@ app.get("/home", requireLogin, (req, res) => {
     res.sendFile(path.join(__dirname, "view", "home.html"));
 });
 
-// review page
-app.get("/reviews", requireLogin, (req, res) => {
-    res.sendFile(path.join(__dirname, "view", "reviews.html"));
-});
-
 // logs the user aout and ends the sessions
 // do the logout stuff here
 app.get("/logout", (req, res) => {
@@ -150,53 +142,21 @@ app.get("/logout", (req, res) => {
     res.redirect("/");
 });
 
-// adding post for reviews
-app.post("/reviews/add", requireLogin, (req, res) => {
-    const { eventId, rating, text } = req.body;
-    if (!eventId || !rating || !text) return res.status(400).send("Invalid request");
-
-    const filePath = path.join(__dirname, "eventData", `${eventId}.json`);
-    if (!fs.existsSync(filePath)) return res.status(404).send("Event not found");
-
-    const eventData = JSON.parse(fs.readFileSync(filePath));
-
-    // Get username from session
-    const users = loadUsers();
-    const user = users.find(u => u.id === req.session.userId);
-    if (!user) return res.status(401).send("User not found");
-
-    // Append new review
-    if (!eventData.reviews) eventData.reviews = [];
-    eventData.reviews.push([text, rating, user.username]);
-
-    // Save updated event file
-    fs.writeFileSync(filePath, JSON.stringify(eventData, null, 2));
-
-    res.sendStatus(200);
-});
-
-
-
 // Events Module
-app.get("/events/list", (req, res) => {
-    const eventDir = path.join(__dirname, "eventData");
+const EVENTS_FILE = path.join(__dirname, "eventData", "events.json");
 
-    fs.readdir(eventDir, (err, files) => {
-        if (err) return res.status(500).json([]);
-        const jsonFiles = files.filter(f => f.endsWith(".json"));
-        res.json(jsonFiles);
-    });
-});
+function loadEvents() {
+    return JSON.parse(fs.readFileSync(EVENTS_FILE));
+}
 
-app.get("/events/data/:file", (req, res) => {
-    const filePath = path.join(__dirname, "eventData", req.params.file);
-    if (!fs.existsSync(filePath)) {
-        return res.status(404).json({ error: "Event not found" });
-    }
+function saveEvents(events) {
+    fs.writeFileSync(EVENTS_FILE, JSON.stringify(events, null, 2));
+}
 
-    const eventData = JSON.parse(fs.readFileSync(filePath));
-    res.json(eventData);
-});
+app.get("/events/all", (req, res) => {
+    const events = loadEvents();
+    res.json(events);
+})
 
 app.get("/admin/new_event", (req, res) => {
 
@@ -208,52 +168,84 @@ app.get("/admin/new_event", (req, res) => {
 });
 
 app.post("/create-event", (req, res) => {
-    const eventData = req.body;
+    const events = loadEvents();
 
-    // Auto-generate eventId
-    const eventId = "event" + Date.now();
-    eventData.eventId = eventId;
+    const newEvent = req.body;
+    newEvent.eventId = "event" + Date.now();
 
-    const filePath = path.join(__dirname, "eventData", `${eventId}.json`);
+    events.push(newEvent);
+    saveEvents(events);
 
-    fs.writeFile(filePath, JSON.stringify(eventData, null, 2), (err) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: "Failed to save event." });
-        }
-        res.status(200).json({ message: "Event created", eventId });
-    });
+    res.json({ message: "Event created", eventId: newEvent.eventId });
 });
 
 app.delete("/events/:eventId", (req, res) => {
-    // Check admin
     if (!req.session.isAdmin) {
         return res.status(403).send("Access denied");
     }
 
-    const eventId = req.params.eventId;
-    const eventDir = path.join(__dirname, "eventData");
+    const events = loadEvents();
 
-    // Look for the file with this eventId
-    fs.readdir(eventDir, (err, files) => {
-        if (err) return res.status(500).send("Server error");
+    const updated = events.filter(e => e.eventId !== req.params.eventId);
 
-        const fileToDelete = files.find(f => {
-            if (!f.endsWith(".json")) return false;
-            const data = JSON.parse(fs.readFileSync(path.join(eventDir, f)));
-            return data.eventId === eventId;
-        });
+    if (updated.length === events.length) {
+        return res.status(404).send("Event not found");
+    }
 
-        if (!fileToDelete) {
-            return res.status(404).send("Event not found");
-        }
+    saveEvents(updated);
 
-        // Delete the file
-        fs.unlink(path.join(eventDir, fileToDelete), err => {
-            if (err) return res.status(500).send("Failed to delete event");
-            res.send("Event deleted successfully");
-        });
-    });
+    res.send("Event deleted successfully");
+});
+
+app.get("/reviews", requireLogin, (req, res) => {
+    res.sendFile(path.join(__dirname, "view", "reviews.html"));
+});
+
+app.post("/reviews/add", requireLogin, (req, res) => {
+    const { eventId, rating, text } = req.body;
+    if (!eventId || !rating || !text) return res.status(400).send("Invalid request");
+
+    // Load all events from events.json
+    const events = loadEvents();
+    const event = events.find(e => e.eventId === eventId);
+    if (!event) return res.status(404).send("Event not found");
+
+    // Get username from session
+    const users = loadUsers();
+    const user = users.find(u => u.id === req.session.userId);
+    if (!user) return res.status(401).send("User not found");
+
+    // Append new review
+    if (!event.reviews) event.reviews = [];
+    event.reviews.push([text, Number(rating), user.username]);
+
+    // Save updated events array
+    saveEvents(events);
+
+    res.sendStatus(200);
+});
+
+app.post("/reviews/delete", (req, res) => {
+    if (!req.session.isAdmin) {
+        return res.status(403).send("Access denied");
+    }
+
+    const { eventId, reviewIndex } = req.body;
+
+    let events = loadEvents();
+    const event = events.find(e => e.eventId === eventId);
+
+    if (!event) return res.status(404).send("Event not found");
+
+    if (!event.reviews || !event.reviews[reviewIndex]) {
+        return res.status(400).send("Invalid review index");
+    }
+
+    event.reviews.splice(reviewIndex, 1);
+
+    saveEvents(events);
+
+    res.send("Review deleted");
 });
 
 app.get("/my_bookings", requireLogin, (req, res) => {
