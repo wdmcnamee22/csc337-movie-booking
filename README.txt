@@ -6,10 +6,7 @@ bookingData
 	- bookings.json
 
 eventData
-	- event001.json
-	- event002.json
-	- event003.json
-	- event004.json
+	- events.json
 
 public
 	- images
