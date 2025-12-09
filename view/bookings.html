@@ -92,9 +92,11 @@
         </div>
     </div>
     <h2>Create Your Booking</h2>
+    
     <!-- Backend will save this info into bookings.json -->
     <form id="bookingForm" method="POST" action="/bookings">
-        <!-- eventId and movieTitle are set from the URL params below -->
+        
+        <!-- Filled dynamically from URL params -->
         <input type="hidden" id="eventId" name="eventId" value="">
         <input type="hidden" id="movieTitle" name="movieTitle" value="">
         <label>Your Name
@@ -121,6 +123,7 @@
                 <option value="9:00 PM">9:00 PM</option>
             </select>
         </label>
+        
         <!-- Backend will save the booking and redirect to /my-bookings -->
         <button type="submit">Book Now</button>
     </form>
@@ -128,6 +131,7 @@
     <a href="/my-bookings">View My Bookings</a>
 </main>
 <script>
+// Pull event details from the URL and load them into the page
 document.addEventListener("DOMContentLoaded", function () {
     const params = new URLSearchParams(window.location.search);
 
@@ -142,8 +146,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Save into hidden fields for booking submission
     document.getElementById("movieTitle").value = name;
-
-    // Temporary eventId assignment – later we can pass real IDs
     document.getElementById("eventId").value = name;
 });
 </script>
