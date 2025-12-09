@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     var container = document.getElementById("bookingsContainer");
 
-    // Helper to map theater codes to readable names
+    // Map theater codes to readable names for display
     function formatTheater(theaterCode) {
         if (theaterCode === "downtown") {
             return "Tannehill Theater";
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return theaterCode || "N/A";
     }
 
-    // First, check if this user is an admin
+    // Check if user is logged in and whether they are an admin
     fetch("/auth/status")
         .then(function (res) {
             return res.json();
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             var isAdmin = status.isAdmin === true;
 
-            // Admins see ALL bookings, normal users see only their own
+            // Admins see all bookings, regular users see only their own
             var url = isAdmin ? "/api/all-bookings" : "/api/my-bookings";
 
             return fetch(url).then(function (res) {
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     var title = b.movieTitle || ("Event: " + b.eventId);
                     var theaterLabel = formatTheater(b.theater);
 
-                    // Base info visible for everyone
+                    // Info shown for each booking
                     var infoHtml =
                         "<h3>" + title + "</h3>" +
                         "<p><strong>Name:</strong> " + (b.name || "N/A") + "</p>" +
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         "<p><strong>Time:</strong> " + (b.time || "N/A") + "</p>" +
                         "<p><strong>Phone:</strong> " + (b.phone || "N/A") + "</p>";
 
-                    // Cancel form
+                    // Cancel form (everyone can cancel their own booking)
                     var cancelForm =
                         "<form method='POST' action='/cancel-booking'>" +
                         "  <input type='hidden' name='bookingId' value='" + b.id + "'>" +
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         div.innerHTML = infoHtml + cancelForm + editForm;
                     } else {
-                        // Normal user: just show info + cancel
+                        // Regular user: info + cancel only
                         div.innerHTML = infoHtml + cancelForm;
                     }
 
