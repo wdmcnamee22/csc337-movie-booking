@@ -31,7 +31,9 @@ app.use(
 
 // since we are using json, we need to be able to recieve it
 // this is done here
-app.use(express.json());
+app.use(
+  express.json()
+);
 
 // **************************************
 // since we will have html pages and javascript files we can use public here
