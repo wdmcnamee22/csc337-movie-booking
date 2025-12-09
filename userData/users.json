@@ -10,5 +10,17 @@
     "username": "Cole",
     "password": "Cole",
     "isAdmin": false
+  },
+  {
+    "id": 1765252602335,
+    "username": "Will",
+    "password": "Will",
+    "isAdmin": false
+  },
+  {
+    "id": 1765252797184,
+    "username": "BillyBob",
+    "password": "BillyBob",
+    "isAdmin": false
   }
 ]
