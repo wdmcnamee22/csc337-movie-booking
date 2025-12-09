@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let isAdmin = false;
 
-async function checkAdmin() {
+async function checkAdmin() {	
     const res = await fetch("/auth/status");
     const data = await res.json();
 

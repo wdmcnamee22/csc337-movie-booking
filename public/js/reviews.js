@@ -1,6 +1,8 @@
 let selectedRating = 0;
+let isAdmin = false;
 
 document.addEventListener("DOMContentLoaded", async () => {
+	checkAdmin();
     const params = new URLSearchParams(window.location.search);
     const eventName = params.get("name");
 
@@ -49,6 +51,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 });
 
+async function checkAdmin() {
+    const res = await fetch("/auth/status");
+    const data = await res.json();
+	
+    if (data.loggedIn && data.isAdmin) {
+        isAdmin = true;
+    }
+}
+
+
+
 async function loadEventByName(eventName) {
     try {
         const response = await fetch("/events/list");
@@ -83,7 +96,20 @@ function renderEventReviews(eventData) {
             <strong>${username}</strong> - ${"★".repeat(rating)}${"☆".repeat(5 - rating)}
             <p>${text}</p>
         `;
-        container.appendChild(div);
+        
+		
+		// add remove button if admin
+        if (isAdmin) {
+            const btn = document.createElement("button");
+            btn.textContent = "Remove Review";
+            btn.classList.add("remove-review-btn");
+            btn.addEventListener("click", () => {
+                deleteReview(eventData.eventId, index);
+            });
+            div.appendChild(btn);
+        }
+		
+		container.appendChild(div);
     });
 
     // Display average rating
@@ -135,4 +161,22 @@ function displayAverageRating(reviews) {
 
     const stars = "★".repeat(fullStars) + (halfStar ? "½" : "") + "☆".repeat(emptyStars);
     avgContainer.textContent = `Average Rating: ${stars} (${avg.toFixed(1)}/5)`;
+}
+
+async function deleteReview(eventId, reviewIndex) {
+
+    const res = await fetch("/reviews/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ eventId, reviewIndex })
+    });
+
+    if (res.ok) {
+        const params = new URLSearchParams(window.location.search);
+        const eventName = params.get("name");
+        const updatedEvent = await loadEventByName(eventName);
+        renderEventReviews(updatedEvent);
+    } else {
+        alert("Failed to delete review.");
+    }
 }
