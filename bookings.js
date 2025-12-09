@@ -2,9 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 module.exports = function (app, requireLogin) {
-    // ------------------------------------
-    // Ensure bookingData directory + bookings.json exist
-    // ------------------------------------
+    // Make sure bookingData/ and bookings.json exist
     const BOOKING_DIR = path.join(__dirname, "bookingData");
     if (!fs.existsSync(BOOKING_DIR)) {
         fs.mkdirSync(BOOKING_DIR);
@@ -15,6 +13,7 @@ module.exports = function (app, requireLogin) {
         fs.writeFileSync(BOOKINGS_FILE, "[]");
     }
 
+    // Load all bookings from the JSON file
     function loadBookings() {
         try {
             return JSON.parse(fs.readFileSync(BOOKINGS_FILE));
@@ -24,6 +23,7 @@ module.exports = function (app, requireLogin) {
         }
     }
 
+    // Save the given bookings array back to the JSON file
     function saveBookings(bookings) {
         try {
             fs.writeFileSync(BOOKINGS_FILE, JSON.stringify(bookings, null, 2));
@@ -33,15 +33,15 @@ module.exports = function (app, requireLogin) {
     }
 
     // ----------------------
-    // Bookings pages
+    // Booking pages
     // ----------------------
+    // Show booking form (user picks theater, time, etc.)
     app.get("/bookings", requireLogin, function (req, res) {
-        // booking form page
         res.sendFile(path.join(__dirname, "view", "bookings.html"));
     });
 
+    // Show "My Bookings" page for the logged-in user
     app.get("/my-bookings", requireLogin, function (req, res) {
-        // list of this user's bookings
         res.sendFile(path.join(__dirname, "view", "my_bookings.html"));
     });
 
