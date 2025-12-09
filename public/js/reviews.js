@@ -3,19 +3,11 @@ let isAdmin = false;
 
 document.addEventListener("DOMContentLoaded", async () => {
 	checkAdmin();
+	
     const params = new URLSearchParams(window.location.search);
     const eventName = params.get("name");
 
-    if (!eventName) {
-        document.getElementById("review-list").innerHTML = "No event specified.";
-        return;
-    }
-
     const eventData = await loadEventByName(eventName);
-    if (!eventData) {
-        document.getElementById("review-list").innerHTML = "Event not found.";
-        return;
-    }
 
     document.getElementById("event-title").textContent = eventData.name;
     renderEventReviews(eventData);
@@ -61,7 +53,7 @@ async function checkAdmin() {
 }
 
 
-
+// loads the event from the event JSON files, given the name of the event from the URL
 async function loadEventByName(eventName) {
     try {
         const response = await fetch("/events/list");
@@ -78,6 +70,7 @@ async function loadEventByName(eventName) {
     }
 }
 
+// renders reviews
 function renderEventReviews(eventData) {
     const container = document.getElementById("review-list");
     container.innerHTML = "";
@@ -134,6 +127,7 @@ function setupStarRating() {
     });
 }
 
+// updates the stars, so their appearance reflects the user's selection
 function updateStars(rating) {
     const stars = document.querySelectorAll("#star-rating .star");
     stars.forEach(star => {
