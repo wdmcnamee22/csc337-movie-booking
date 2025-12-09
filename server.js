@@ -38,7 +38,9 @@ app.use(
 // **************************************
 // since we will have html pages and javascript files we can use public here
 // if needed 
-app.use(express.static("public"));
+app.use(
+  express.static("public")
+);
 app.use("/public", express.static(path.join(__dirname, "public")));
 
 app.use(
