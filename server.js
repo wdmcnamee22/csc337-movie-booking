@@ -22,7 +22,12 @@ app.get("/", (req, res) => {
 });
 
 // express reads the data from req.body
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
+
 
 // since we are using json, we need to be able to recieve it
 // this is done here
