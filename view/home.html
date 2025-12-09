@@ -37,6 +37,10 @@
       gap: 15px;
     }
 
+    .user-info a {
+      text-decoration: none;                    
+    }
+
     .username {
       color: black;
       font-weight: bold;
@@ -49,12 +53,17 @@
       color: white;
       border-radius: 6px;
       cursor: pointer;
+      font-size: 18px;
     }
 
+    .logout-btn:hover {
+      background-color: #ff7a7a;
+    }
 
     .gallery-block {
       margin: 40px 0;
       padding-left: 20px;
+      padding-right: 20px;
     }
 
     .gallery-title {
@@ -111,18 +120,40 @@
     }
 
     .btn {
+      margin-left: 5px;
+      margin-right: 5px;
+      text-decoration: none;
       width: 48%;
-      padding: 8px 0;
+      padding: 8px 14px;
       background-color: #555;
       border: none;
       color: white;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 18px;
     }
 
     .btn:hover {
       background-color: #777;
+    }
+
+    .delete-event-btn {
+      margin-left: 5px;
+      margin-right: 5px;
+      background-color: #cc0000;
+      color: white;
+      padding: 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .delete-event-btn:hover {
+      background-color: #a30000;
+    }
+
+    .admin-only {
+        display: none;
     }
   </style>
 </head>
@@ -132,9 +163,10 @@
   <div class="header">
     <div class="site-title">MovieVerse</div>
 
-    <div class="user-info">
-      <div class="username">User123</div>
-      <button class="logout-btn">Logout</button>
+        <div class="user-info">
+          <a href="/my_bookings" class="btn">My Bookings</a>
+          <a href="/logout" class="logout-btn">Logout</a>
+        </div>
     </div>
   </div>
 

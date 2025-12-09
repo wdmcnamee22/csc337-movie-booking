@@ -1,7 +1,14 @@
 [
   {
     "id": 1765064390138,
+    "username": "admin",
+    "password": "admin",
+    "isAdmin": true
+  },
+  {
+    "id": 1765233078046,
     "username": "Cole",
-    "password": "Cole"
+    "password": "Cole",
+    "isAdmin": false
   }
 ]

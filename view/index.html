@@ -41,7 +41,7 @@
     <body>
         <div class = "box">
             <h2>Login</h2>
-            <form action = "/login" method = "POST">
+            <form id="loginForm">
                 <label for ="username">Username:</label>
                 <input type = "text" id = "username" name = "username" placeholder="Enter Your Username" required>
                 <br>
@@ -52,8 +52,9 @@
                 <br>
                 <button type = "submit">Sign In</button>
             </form>
+            <p id="loginError" style="color: red; display: none;"></p>
             <h2>Create Account</h2>
-            <form action="/register" method="POST">
+            <form id="registerForm">
                 <label for="reg-username">Username:</label>
                 <input type="text" id="reg-username" name="username" placeholder="Enter Your Username" required>
                 <br><br>
@@ -62,6 +63,10 @@
                  <br><br>
                 <button type="submit">Sign Up</button>
             </form>
+            <p id="registerError" style="color: red; display: none;"></p>
         </div>
+
+        <script src="/js/login.js"></script>
+        <script src="/js/register.js"></script>
     </body>
 </html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+    <head>
+        <title>Create Event</title>
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a1c4fd);
+                background-attachment: fixed;
+                color: white;
+            }
+        
+            header {
+                padding: 12px;
+                text-align: center;
+            }
+        
+            header h1,
+            h2 {
+                color: black;
+                text-align: center;
+            }
+        
+            #main {
+                max-width: 600px;
+                margin: 20px auto;
+                padding: 15px;
+                background: rgba(255, 255, 255, 0.85);
+                border-radius: 10px;
+                color: black;
+            }
+        
+            .event-preview {
+                display: flex;
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+        
+            .event-preview img {
+                width: 120px;
+                height: 180px;
+                object-fit: cover;
+                border-radius: 5px;
+                background: #ccc;
+            }
+        
+            label {
+                display: block;
+                margin-top: 12px;
+            }
+        
+            input,
+            textarea {
+                width: 100%;
+                padding: 6px;
+                margin-top: 4px;
+                box-sizing: border-box;
+            }
+
+            textarea {
+                resize: none;
+                height: 90px;
+            }
+        
+            button {
+                margin-top: 14px;
+                padding: 10px;
+                width: 100%;
+                border: none;
+                border-radius: 6px;
+                background: #2a62ff;
+                color: white;
+                cursor: pointer;
+            }
+        
+            a {
+                display: block;
+                margin-top: 16px;
+                text-align: center;
+                color: black;
+                text-decoration: underline;
+            }
+        </style>    
+    </head>
+
+    <body>
+    <header>
+        <h1>Create a New Event</h1>
+    </header>
+
+    <main id="main">
+        <h2>Event Preview</h2>
+
+        <div class="event-preview">
+            <img id="previewImage" src="poster-placeholder.jpg" alt="Event Poster">
+            <div>
+                <h3 id="previewName">Event Name Preview</h3>
+                <p id="previewDescription">
+                    Event description will appear here.
+                </p>
+                <p><b>Date:</b> <span id="previewDate">No date selected</span></p>
+            </div>
+        </div>
+
+        <h2>Enter Event Details</h2>
+
+        <form id="createEventForm">
+            <label>Event Name
+                <input type="text" id="eventName" required>
+            </label>
+
+            <label>Date & Time
+                <input type="datetime-local" id="eventDate" required>
+            </label>
+
+            <label>Event Description
+                <textarea id="eventDescription"></textarea>
+            </label>
+
+            <label>Genre
+                <input type="text" id="eventGenre" required>
+            </label>
+
+            <label>Poster Image URL
+                <input type="text" id="eventImage" placeholder="https://example.com/poster.jpg">
+            </label>
+
+            <button type="submit">Create Event</button>
+        </form>
+
+        <a href="/home">Return Home</a>
+    </main>
+
+    <script>
+    // Live preview updates
+    const nameInput = document.getElementById("eventName");
+    const descInput = document.getElementById("eventDescription");
+    const dateInput = document.getElementById("eventDate");
+    const imageInput = document.getElementById("eventImage");
+
+    nameInput.addEventListener("input", () => {
+        document.getElementById("previewName").textContent =
+            nameInput.value || "Event Name Preview";
+    });
+
+    descInput.addEventListener("input", () => {
+        document.getElementById("previewDescription").textContent =
+            descInput.value || "Event description will appear here.";
+    });
+
+    dateInput.addEventListener("input", () => {
+        document.getElementById("previewDate").textContent =
+            dateInput.value || "No date selected";
+    });
+
+    imageInput.addEventListener("input", () => {
+        document.getElementById("previewImage").src =
+            imageInput.value || "/public/images/placeholder.png";
+    });
+
+    document.getElementById("createEventForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById("eventName").value.trim();
+        const description = document.getElementById("eventDescription").value.trim();
+        const datetime = document.getElementById("eventDate").value; 
+        const image = document.getElementById("eventImage").value.trim();
+        const genre = document.getElementById("eventGenre").value.trim();
+
+        // Split datetime-local into date + time
+        const [date, timeRaw] = datetime.split("T");
+        const time = new Date(`1970-01-01T${timeRaw}`).toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "2-digit"
+        });
+
+        const newEvent = {
+            name,
+            description,
+            date,
+            time,
+            genre,
+            image,
+            reviews: []
+        };
+
+        const response = await fetch("/create-event", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newEvent)
+        });
+
+        if (response.ok) {
+            alert("Event created successfully!");
+            window.location.href = "/home";
+        } else {
+            alert("Failed to create event.");
+        }
+    });
+    </script>
+
+</body>
+</html>
