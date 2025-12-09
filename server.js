@@ -51,6 +51,8 @@ app.use(
     })
 );
 
+app.use("/events/data", express.static(path.join(__dirname, "eventData")));
+
 // get and read the users from the json file
 function loadUsers() {
     try {
